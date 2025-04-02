@@ -36,7 +36,7 @@ cp .env.example .env
 
 ### Claude 설정 업데이트
 
-Claude 설정을 업데이트하여 메모리 파일 경로를 확인합니다:
+Claude 설정을 업데이트하여 메모리 파일 경로를 확인하고, 이전 복사본을 제거합니다:
 
 ```bash
 node setup-claude-memory.js
@@ -44,8 +44,9 @@ node setup-claude-memory.js
 
 이 스크립트는 다음 작업을 수행합니다:
 1. Claude 설정 파일의 백업 생성
-2. Claude의 메모리 서버 설정을 확인하고 필요시 업데이트
-3. 메모리 경로를 `C:\Users\dydgu\Desktop\MCP-Tools\node_modules\@modelcontextprotocol\server-memory\dist\memory.json`로 설정
+2. 이전에 생성한 메모리 복사본 파일 삭제 (`C:\Users\dydgu\Desktop\memory.json` 등)
+3. Claude의 메모리 서버 설정을 확인하고 필요시 업데이트
+4. 메모리 경로를 `C:\Users\dydgu\Desktop\MCP-Tools\node_modules\@modelcontextprotocol\server-memory\dist\memory.json`로 설정
 
 ### 서버 시작
 
@@ -80,6 +81,7 @@ C:\Users\dydgu\Desktop\MCP-Tools\node_modules\@modelcontextprotocol\server-memor
 1. 데이터 복사나 변환이 필요 없음
 2. Claude와 GPTs가 항상 최신 데이터를 공유
 3. 데이터 중복이나 불일치 없음
+4. 이전 복사본 파일은 자동으로 삭제됨
 
 ## Claude 설정 확인
 

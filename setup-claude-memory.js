@@ -7,6 +7,12 @@ const CLAUDE_CONFIG_PATH = 'C:\\Users\\dydgu\\AppData\\Roaming\\Claude\\claude_d
 // 메모리 파일은 원래 위치 그대로 사용
 const MEMORY_PATH = 'C:\\Users\\dydgu\\Desktop\\MCP-Tools\\node_modules\\@modelcontextprotocol\\server-memory\\dist\\memory.json';
 
+// 이전에 사용했던 복사본 위치들 (삭제 대상)
+const OLD_MEMORY_PATHS = [
+  'C:\\Users\\dydgu\\Desktop\\memory.json',
+  'C:\\Users\\dydgu\\Desktop\\MCP-Tools\\memory.json'
+];
+
 async function updateClaudeConfig() {
   try {
     console.log(`Claude 설정 파일 읽기: ${CLAUDE_CONFIG_PATH}`);
@@ -31,6 +37,22 @@ async function updateClaudeConfig() {
     await createDirectory(path.dirname(backupPath));
     await fs.writeFile(backupPath, configData);
     console.log(`백업 생성 완료: ${backupPath}`);
+
+    // 이전 복사본 파일 삭제
+    console.log('이전 메모리 복사본 파일 삭제 중...');
+    for (const oldPath of OLD_MEMORY_PATHS) {
+      try {
+        const exists = await fileExists(oldPath);
+        if (exists) {
+          await fs.unlink(oldPath);
+          console.log(`삭제 완료: ${oldPath}`);
+        } else {
+          console.log(`파일이 존재하지 않음: ${oldPath}`);
+        }
+      } catch (error) {
+        console.error(`파일 삭제 중 오류 발생: ${oldPath}`, error);
+      }
+    }
 
     // 메모리 서버 설정 확인 및 업데이트
     if (!config.mcpServers.memory) {
@@ -62,6 +84,7 @@ async function updateClaudeConfig() {
       "// Claude와 GPTs 간 메모리 공유를 위한 설정 업데이트입니다.\n" +
       "// memory.json 파일 경로를 원래 경로 그대로 사용하여 데이터 복제 없이 동일한 파일 공유.\n" + 
       `// 메모리 경로: ${MEMORY_PATH}\n` +
+      "// 이전에 생성된 복사본 파일들은 삭제되었습니다.\n" +
       "// API 서버: https://github.com/na06078/claude-gpt-memory-api를 통해 GPTs에서도 같은 메모리에 접근 가능합니다.\n";
     
     await fs.writeFile(backupPath, commentedConfig);

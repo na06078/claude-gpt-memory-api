@@ -6,7 +6,7 @@ REST API 서버로 Claude와 GPTs 간 메모리(지식 그래프) 공유를 가�
 
 - Claude 메모리 MCP 서버와 동일한 지식 그래프 구조 및 기능 제공
 - REST API를 통한 메모리 액세스 (claude-gpt-memory-api)
-- GPTs 및 Claude 모두 접근 가능한 공통 메모리 저장소
+- GPTs 및 Claude 모두 **동일한 파일**을 직접 접근하는 방식으로 메모리 공유
 
 ## 설치
 
@@ -29,15 +29,14 @@ npm install
 cp .env.example .env
 ```
 
-`.env` 파일을 편집하여 `MEMORY_FILE_PATH`를 설정합니다. 
-Claude와 메모리를 공유하려면 Claude 설정의 메모리 파일 경로를 사용합니다.
+`.env` 파일을 편집하여 필요한 경우 서버 포트나 메모리 경로를 수정합니다.
+기본 설정은 Claude MCP 서버가 사용하는 원본 메모리 파일을 그대로 참조합니다.
 
 ## 사용법
 
 ### Claude 설정 업데이트
 
-먼저 Claude 설정을 업데이트하여 메모리 파일 경로를 `C:\Users\dydgu\Desktop\MCP-Tools\memory.json`으로
-변경합니다:
+Claude 설정을 업데이트하여 메모리 파일 경로를 확인합니다:
 
 ```bash
 node setup-claude-memory.js
@@ -45,8 +44,8 @@ node setup-claude-memory.js
 
 이 스크립트는 다음 작업을 수행합니다:
 1. Claude 설정 파일의 백업 생성
-2. 기존 메모리 파일을 새 위치로 복사
-3. Claude의 메모리 서버 설정 업데이트
+2. Claude의 메모리 서버 설정을 확인하고 필요시 업데이트
+3. 메모리 경로를 `C:\Users\dydgu\Desktop\MCP-Tools\node_modules\@modelcontextprotocol\server-memory\dist\memory.json`로 설정
 
 ### 서버 시작
 
@@ -70,6 +69,18 @@ npm start
 - `GET /api/search?query=검색어`: 지식 그래프 검색
 - `GET /api/nodes?names=이름1,이름2`: 특정 노드 불러오기
 
+## 메모리 공유 방식
+
+이 서버는 Claude MCP 메모리 서버가 사용하는 **동일한 파일**을 직접 참조합니다:
+```
+C:\Users\dydgu\Desktop\MCP-Tools\node_modules\@modelcontextprotocol\server-memory\dist\memory.json
+```
+
+따라서:
+1. 데이터 복사나 변환이 필요 없음
+2. Claude와 GPTs가 항상 최신 데이터를 공유
+3. 데이터 중복이나 불일치 없음
+
 ## Claude 설정 확인
 
 Claude의 설정 파일이 올바르게 설정되었는지 확인하세요:
@@ -83,7 +94,7 @@ Claude의 설정 파일이 올바르게 설정되었는지 확인하세요:
         "C:\\Users\\dydgu\\Desktop\\MCP-Tools\\node_modules\\@modelcontextprotocol\\server-memory\\dist\\index.js"
       ],
       "env": {
-        "MEMORY_FILE_PATH": "C:\\Users\\dydgu\\Desktop\\MCP-Tools\\memory.json"
+        "MEMORY_FILE_PATH": "C:\\Users\\dydgu\\Desktop\\MCP-Tools\\node_modules\\@modelcontextprotocol\\server-memory\\dist\\memory.json"
       }
     }
   }

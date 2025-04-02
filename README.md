@@ -34,6 +34,20 @@ Claude와 메모리를 공유하려면 Claude 설정의 메모리 파일 경로�
 
 ## 사용법
 
+### Claude 설정 업데이트
+
+먼저 Claude 설정을 업데이트하여 메모리 파일 경로를 `C:\Users\dydgu\Desktop\MCP-Tools\memory.json`으로
+변경합니다:
+
+```bash
+node setup-claude-memory.js
+```
+
+이 스크립트는 다음 작업을 수행합니다:
+1. Claude 설정 파일의 백업 생성
+2. 기존 메모리 파일을 새 위치로 복사
+3. Claude의 메모리 서버 설정 업데이트
+
 ### 서버 시작
 
 ```bash
@@ -56,17 +70,31 @@ npm start
 - `GET /api/search?query=검색어`: 지식 그래프 검색
 - `GET /api/nodes?names=이름1,이름2`: 특정 노드 불러오기
 
-## Claude 설정 변경
+## Claude 설정 확인
 
-Claude 앱 설정에서 메모리 서버가 이 API 서버와 동일한 메모리 파일을 사용하도록 설정합니다:
+Claude의 설정 파일이 올바르게 설정되었는지 확인하세요:
 
-1. Claude 데스크톱 앱 설정 파일을 엽니다: `C:\\Users\\dydgu\\AppData\\Roaming\\Claude\\claude_desktop_config.json`
-2. memory 서버 설정의 `MEMORY_FILE_PATH` 환경 변수가 API 서버와 동일한 경로를 가리키는지 확인합니다.
+```json
+{
+  "mcpServers": {
+    "memory": {
+      "command": "node",
+      "args": [
+        "C:\\Users\\dydgu\\Desktop\\MCP-Tools\\node_modules\\@modelcontextprotocol\\server-memory\\dist\\index.js"
+      ],
+      "env": {
+        "MEMORY_FILE_PATH": "C:\\Users\\dydgu\\Desktop\\MCP-Tools\\memory.json"
+      }
+    }
+  }
+}
+```
 
 ## GPTs 설정
 
 1. OpenAI GPTs에서 "Actions" 기능을 사용하여 API 서버 엔드포인트에 연결합니다.
-2. 엔드포인트의 URL과 사용 방법을 스키마에 맞게 구성합니다.
+2. openapi-schema.json 파일의 내용을 사용하여 스키마를 설정합니다.
+3. 서버 URL을 액세스 가능한 주소로 설정합니다.
 
 ## 샘플 API 요청
 

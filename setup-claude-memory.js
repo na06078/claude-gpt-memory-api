@@ -3,7 +3,7 @@ import path from 'path';
 
 // Claude 설정 파일 경로
 const CLAUDE_CONFIG_PATH = 'C:\\Users\\dydgu\\AppData\\Roaming\\Claude\\claude_desktop_config.json';
-const MEMORY_PATH = 'C:\\Users\\dydgu\\Desktop\\memory.json';
+const MEMORY_PATH = 'C:\\Users\\dydgu\\Desktop\\MCP-Tools\\memory.json';
 
 async function updateClaudeConfig() {
   try {
@@ -29,6 +29,27 @@ async function updateClaudeConfig() {
     await createDirectory(path.dirname(backupPath));
     await fs.writeFile(backupPath, configData);
     console.log(`백업 생성 완료: ${backupPath}`);
+
+    // 기존 메모리 파일 복사하기
+    try {
+      const existingMemoryPath = 'C:\\Users\\dydgu\\Desktop\\MCP-Tools\\node_modules\\@modelcontextprotocol\\server-memory\\dist\\memory.json';
+      const existingMemoryExists = await fileExists(existingMemoryPath);
+      
+      if (existingMemoryExists) {
+        console.log(`기존 메모리 파일을 찾았습니다: ${existingMemoryPath}`);
+        console.log(`새 위치로 복사합니다: ${MEMORY_PATH}`);
+        
+        const memoryData = await fs.readFile(existingMemoryPath, 'utf8');
+        await fs.writeFile(MEMORY_PATH, memoryData);
+        console.log('메모리 파일 복사 완료');
+      } else {
+        console.log(`기존 메모리 파일을 찾을 수 없습니다: ${existingMemoryPath}`);
+        console.log('빈 메모리 파일을 생성합니다.');
+        await fs.writeFile(MEMORY_PATH, '');
+      }
+    } catch (error) {
+      console.error('메모리 파일 복사 중 오류 발생:', error);
+    }
 
     // 메모리 서버 설정 확인 및 업데이트
     if (!config.mcpServers.memory) {
@@ -58,7 +79,8 @@ async function updateClaudeConfig() {
       `\n// 생성된 정확한 날짜와 시간: ${new Date().toISOString()} \n` +
       "// 무슨 작업을 위해 백업을 하는지: \n" +
       "// Claude와 GPTs 간 메모리 공유를 위한 설정 업데이트입니다.\n" +
-      "// memory.json 파일 경로를 공유 가능한 위치로 변경하여 API 서버와 Claude가 같은 메모리 파일을 사용하도록 합니다.\n" +
+      "// memory.json 파일 경로를 C:\\Users\\dydgu\\Desktop\\MCP-Tools\\memory.json으로 변경하여\n" + 
+      "// API 서버와 Claude가 같은 메모리 파일을 사용하도록 합니다.\n" +
       "// API 서버: https://github.com/na06078/claude-gpt-memory-api를 통해 GPTs에서도 같은 메모리에 접근 가능합니다.\n";
     
     await fs.writeFile(backupPath, commentedConfig);

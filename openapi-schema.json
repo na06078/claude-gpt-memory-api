@@ -1,0 +1,468 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Claude-GPT Memory API",
+    "description": "API for accessing and managing shared memory between Claude and GPTs",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3030",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/api/graph": {
+      "get": {
+        "summary": "Get the entire knowledge graph",
+        "description": "Returns all entities and relations in the knowledge graph",
+        "operationId": "readGraph",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Graph"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/entities": {
+      "post": {
+        "summary": "Create new entities",
+        "description": "Add new entities to the knowledge graph",
+        "operationId": "createEntities",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "entities": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Entity"
+                    }
+                  }
+                },
+                "required": ["entities"]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Entities created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Entity"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete entities",
+        "description": "Delete entities from the knowledge graph",
+        "operationId": "deleteEntities",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "entityNames": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": ["entityNames"]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Entities deleted successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/relations": {
+      "post": {
+        "summary": "Create new relations",
+        "description": "Add new relations between entities in the knowledge graph",
+        "operationId": "createRelations",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "relations": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Relation"
+                    }
+                  }
+                },
+                "required": ["relations"]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Relations created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Relation"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete relations",
+        "description": "Delete relations from the knowledge graph",
+        "operationId": "deleteRelations",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "relations": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Relation"
+                    }
+                  }
+                },
+                "required": ["relations"]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Relations deleted successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/observations": {
+      "post": {
+        "summary": "Add observations to entities",
+        "description": "Add new observations to existing entities in the knowledge graph",
+        "operationId": "addObservations",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "observations": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ObservationAdd"
+                    }
+                  }
+                },
+                "required": ["observations"]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Observations added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ObservationResult"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete observations",
+        "description": "Delete observations from entities in the knowledge graph",
+        "operationId": "deleteObservations",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "deletions": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ObservationDelete"
+                    }
+                  }
+                },
+                "required": ["deletions"]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Observations deleted successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/search": {
+      "get": {
+        "summary": "Search the knowledge graph",
+        "description": "Search for entities and relations matching a query",
+        "operationId": "searchNodes",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search query to match against entity names, types, and observation content",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Graph"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/nodes": {
+      "get": {
+        "summary": "Get specific nodes by name",
+        "description": "Retrieve specific nodes and their relations by name",
+        "operationId": "openNodes",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "names",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated list of entity names to retrieve",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Graph"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Entity": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the entity"
+          },
+          "entityType": {
+            "type": "string",
+            "description": "The type of the entity"
+          },
+          "observations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of observation contents associated with the entity"
+          }
+        },
+        "required": ["name", "entityType", "observations"]
+      },
+      "Relation": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "description": "The name of the entity where the relation starts"
+          },
+          "to": {
+            "type": "string",
+            "description": "The name of the entity where the relation ends"
+          },
+          "relationType": {
+            "type": "string",
+            "description": "The type of the relation"
+          }
+        },
+        "required": ["from", "to", "relationType"]
+      },
+      "ObservationAdd": {
+        "type": "object",
+        "properties": {
+          "entityName": {
+            "type": "string",
+            "description": "The name of the entity to add the observations to"
+          },
+          "contents": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of observation contents to add"
+          }
+        },
+        "required": ["entityName", "contents"]
+      },
+      "ObservationResult": {
+        "type": "object",
+        "properties": {
+          "entityName": {
+            "type": "string",
+            "description": "The name of the entity"
+          },
+          "addedObservations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of observation contents that were added"
+          }
+        },
+        "required": ["entityName", "addedObservations"]
+      },
+      "ObservationDelete": {
+        "type": "object",
+        "properties": {
+          "entityName": {
+            "type": "string",
+            "description": "The name of the entity containing the observations"
+          },
+          "observations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of observations to delete"
+          }
+        },
+        "required": ["entityName", "observations"]
+      },
+      "Graph": {
+        "type": "object",
+        "properties": {
+          "entities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Entity"
+            }
+          },
+          "relations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Relation"
+            }
+          }
+        },
+        "required": ["entities", "relations"]
+      }
+    }
+  }
+}

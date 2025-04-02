@@ -10,8 +10,8 @@ const app = express();
 const PORT = process.env.PORT || 3030;
 
 // Configure memory file path - use environment variable or default location
-// For Claude integration use C:\\Users\\dydgu\\Desktop\\memory.json
-const MEMORY_FILE_PATH = process.env.MEMORY_FILE_PATH || path.join(__dirname, 'memory.json');
+// For Claude integration use C:\\Users\\dydgu\\Desktop\\MCP-Tools\\memory.json
+const MEMORY_FILE_PATH = process.env.MEMORY_FILE_PATH || 'C:\\Users\\dydgu\\Desktop\\MCP-Tools\\memory.json';
 
 app.use(express.json());
 app.use(cors());
